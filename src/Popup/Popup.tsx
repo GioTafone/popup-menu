@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Popup.css';
 
-interface PopupMenuProps {
+interface PopupProps {
   buttonTitle: string;
   options: string[];
   onSelect: (selectedOption: string) => void;
 }
 
-const PopupMenu: React.FC<PopupMenuProps> = ({ buttonTitle, options, onSelect }) => {
+const Popup: React.FC<PopupProps> = ({ buttonTitle, options, onSelect }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleButtonClick = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -19,6 +20,24 @@ const PopupMenu: React.FC<PopupMenuProps> = ({ buttonTitle, options, onSelect })
     setIsMenuOpen(false);
   };
 
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    } else {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isMenuOpen]);
+
   const renderOptions = (): JSX.Element[] => {
     return options.map((option) => (
       <div key={option} className="option" onClick={() => handleOptionClick(option)}>
@@ -28,7 +47,7 @@ const PopupMenu: React.FC<PopupMenuProps> = ({ buttonTitle, options, onSelect })
   };
 
   return (
-    <div className="popup-menu">
+    <div ref={menuRef} className="popup-menu">
       <button className="button" onClick={handleButtonClick}>
         {buttonTitle}
       </button>
@@ -37,4 +56,4 @@ const PopupMenu: React.FC<PopupMenuProps> = ({ buttonTitle, options, onSelect })
   );
 };
 
-export default PopupMenu;
+export default Popup;

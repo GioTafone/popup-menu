@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PopupMenu from './Popup';
+import PopupMenu from './Popup/Popup';
 
 const App: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState('');

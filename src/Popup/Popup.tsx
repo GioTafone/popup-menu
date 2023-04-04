@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Popup.css';
 
 interface PopupMenuProps {
   buttonTitle: string;
@@ -20,16 +21,18 @@ const PopupMenu: React.FC<PopupMenuProps> = ({ buttonTitle, options, onSelect })
 
   const renderOptions = (): JSX.Element[] => {
     return options.map((option) => (
-      <div key={option} onClick={() => handleOptionClick(option)}>
+      <div key={option} className="option" onClick={() => handleOptionClick(option)}>
         {option}
       </div>
     ));
   };
 
   return (
-    <div>
-      <button onClick={handleButtonClick}>{buttonTitle}</button>
-      {isMenuOpen && <div>{renderOptions()}</div>}
+    <div className="popup-menu">
+      <button className="button" onClick={handleButtonClick}>
+        {buttonTitle}
+      </button>
+      {isMenuOpen && <div className="options-menu">{renderOptions()}</div>}
     </div>
   );
 };
